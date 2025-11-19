@@ -1,0 +1,154 @@
+""" Abstract class TaxBracket with compute_tax function"""
+class TaxBracket:
+    TAX_PERCENTAGE = 0
+    def __init__(self):
+        pass
+    def compute_tax(self, taxable_income: int):
+        pass
+    def get_description(self):
+        return "abstract class TaxBracket"
+    def compute_taxable_amount(self):
+        pass
+    def get_rate(self):
+        return self.TAX_PERCENTAGE
+
+""" First Tax Bracket class 0 to 20000"""
+class FirstTaxBracket(TaxBracket):
+    TAX_PERCENTAGE = 0
+    LOWER_BOUND = 0
+    UPPER_BOUND = 20000
+    def compute_tax(self,taxable_income: int):
+        return self.compute_taxable_amount(taxable_income) * self.TAX_PERCENTAGE
+    def get_description(self):
+        return "first 0 - 20000"
+    def compute_taxable_amount(self,taxable_income: int):
+        return min( max(taxable_income - self.LOWER_BOUND, 0) ,self.UPPER_BOUND -  self.LOWER_BOUND)
+    
+class SecondTaxBracket(TaxBracket):
+    LOWER_BOUND = 20000
+    UPPER_BOUND = 40000
+    TAX_PERCENTAGE = 10 / 100
+    def compute_tax(self,taxable_income: int):
+        return self.compute_taxable_amount(taxable_income) * self.TAX_PERCENTAGE
+    def get_description(self):
+        return "next 20001-40000"
+    def compute_taxable_amount(self,taxable_income: int):
+        return min( max(taxable_income - self.LOWER_BOUND, 0) ,self.UPPER_BOUND -  self.LOWER_BOUND)
+    
+class ThirdTaxBracket(TaxBracket):
+    LOWER_BOUND = 40000
+    UPPER_BOUND = 80000
+    TAX_PERCENTAGE = 20 / 100
+    def compute_tax(self,taxable_income: int):
+        return self.compute_taxable_amount(taxable_income)  * self.TAX_PERCENTAGE   
+    def get_description(self):
+        return "next 40001-80000"
+    def compute_taxable_amount(self,taxable_income: int):
+        return min( max(taxable_income - self.LOWER_BOUND, 0) ,self.UPPER_BOUND -  self.LOWER_BOUND)
+
+class FourthTaxBracket(TaxBracket):
+    LOWER_BOUND = 80000
+    UPPER_BOUND = 180000
+    TAX_PERCENTAGE = 30 / 100
+    def compute_tax(self, taxable_income: int):
+        return self.compute_taxable_amount(taxable_income)  * self.TAX_PERCENTAGE
+    def get_description(self):
+        return "next 80001-180000"
+    def compute_taxable_amount(self,taxable_income: int):
+        return min( max(taxable_income - self.LOWER_BOUND, 0) ,self.UPPER_BOUND -  self.LOWER_BOUND)
+
+class HighestTaxBracket(TaxBracket):
+    LOWER_BOUND = 180000
+    TAX_PERCENTAGE = 40 / 100
+    def compute_tax(self, taxable_income: int):
+        return  self.compute_taxable_amount(taxable_income) * self.TAX_PERCENTAGE
+    def get_description(self):
+        return "180001 and above"
+    def compute_taxable_amount(self,taxable_income: int):
+        return max(taxable_income - self.LOWER_BOUND, 0)
+    
+class TaxBracketComposite:
+    def __init__(self):
+        # The list to hold child components (TaxBracket instances)
+        self._children:list[TaxBracket] = []
+    
+    def add_tax_bracket(self, tax_bracket: TaxBracket):
+        """Adds a new bracket to the composite."""
+        self._children.append(tax_bracket)
+    
+    def remove_tax_bracket(self, tax_bracket: TaxBracket):
+        """Removes a bracket from the composite."""
+        self._children.remove(tax_bracket)
+    def compute_total_tax_only(self, taxable_income: int):
+        """
+        Aggregates the tax computed by all individual child brackets (the core
+        functionality of the Composite Pattern for this problem), returns result only, no print output.
+        """
+        pass
+    
+    def compute_tax_printable(self, name:str, taxable_income: int) -> float:
+        """
+        Aggregates the tax computed by all individual child brackets (the core
+        functionality of the Composite Pattern for this problem).
+        
+        This method is updated to print the requested detailed table format.
+        """
+        printable_result: list[tuple[str, float, float]] = []
+        total_tax: float = 0.0
+        for tax_bracket in self._children:
+            taxable_amount = tax_bracket.compute_taxable_amount(taxable_income)
+            income_taxed = tax_bracket.compute_tax(taxable_income)
+            print('tx', taxable_amount , 'income taxd',income_taxed , 'from ', tax_bracket.get_description() )
+            printable_result.append([tax_bracket.get_description(), tax_bracket.get_rate(), taxable_amount, income_taxed])
+            total_tax += income_taxed
+        print(f"\nAnnual Salary {taxable_income:,.0f}")
+        
+        # Column formatting widths
+        COL_WIDTH_DESC = 25
+        COL_WIDTH_RATE = 10
+        COL_WIDTH_INCOME = 15
+        COL_WIDTH_TAX = 15
+        
+        separator = f"+{'-' * COL_WIDTH_DESC}+{'-' * COL_WIDTH_RATE}+{'-' * COL_WIDTH_INCOME}+{'-' * COL_WIDTH_TAX}+"
+        
+        # 2. Header (Updated names)
+        print(separator)
+        print(f"|{'Salary Bracket':<{COL_WIDTH_DESC}}|{'Rate':^{COL_WIDTH_RATE}}|{'Taxable Amount':>{COL_WIDTH_INCOME}}|{'Total Tax':>{COL_WIDTH_TAX}}|")
+        print(separator)
+        
+        # Data Rows
+        for desc, rate, taxable_amount, tax in printable_result:
+            print(f"|{desc:<{COL_WIDTH_DESC}}|{rate * 100:^{COL_WIDTH_RATE}.0f}%|{taxable_amount:>{COL_WIDTH_INCOME},.0f}|{tax:>{COL_WIDTH_TAX},.2f}|")
+
+        # 3. Total Row (Updated description)
+        print(separator)
+        print(f"|{'**Total**':<{COL_WIDTH_DESC}}|{'':^{COL_WIDTH_RATE}}|{taxable_income:>{COL_WIDTH_INCOME},.0f}|{total_tax:>{COL_WIDTH_TAX},.2f}|")
+        print(separator)
+
+
+
+
+if __name__ == "__main__":
+    # 1. Create the Composite object
+    tax_system = TaxBracketComposite()
+
+    # 2. Add all Leaf objects (Tax Brackets) to the Composite
+    first_bracket = FirstTaxBracket()
+    second_bracket = SecondTaxBracket()
+    third_bracket = ThirdTaxBracket()
+    fourth_bracket = FourthTaxBracket()
+    highest_bracket =  HighestTaxBracket()
+
+    tax_system.add_tax_bracket(first_bracket)
+    tax_system.add_tax_bracket(second_bracket)
+    tax_system.add_tax_bracket(third_bracket)
+    tax_system.add_tax_bracket(fourth_bracket)
+    tax_system.add_tax_bracket(highest_bracket)
+
+
+    tax_system.compute_tax_printable('Gilbert' , 60000)
+    tax_system.compute_tax_printable('Maymay' , 80150)
+
+    tax_system.compute_tax_printable('Anton' , 200000)
+
+    tax_system.compute_tax_printable('Ronald' , -5)
