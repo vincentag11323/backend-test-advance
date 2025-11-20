@@ -11,6 +11,7 @@ Server starts at http://127.0.0.1:8000
 Server Documentation at http://127.0.0.1:8000/docs  
 ```
 Documentation is using Swagger UI. FASTAPI autogenerates this by default.
+You can test the API through the Swagger UI at `http://127.0.0.1:8000/docs`
 
 # Database (DB)
 Database (often shortened to DB in my comments) is using `sqlite`.
@@ -85,3 +86,75 @@ EXPECTED OUTPUT:
 ======================= 6 passed, 2 warnings in X.XXs =========================================================================================
 ```
 
+# Tax Calculation
+Tax calculation is using `Composite` and `Template Method` Design Pattern for decoupling purposes. 
+This is explained in the `OOP UML Class Diagram.pdf` diagram that I've submitted.
+`Please note` that in my implementation, I use 2 decimal places since it's a currency, and I mostly use `float` data type to deal with numbers.
+
+The implementation classes is located at `compute_tax.py` 
+it has `__main__` execution block, so you can run it by simply calling:
+```
+python3 compute_tax.py
+```
+I've already used the same tests as written in the instructions.
+
+they will output like this:
+```
+(venv) gvincenta@Gilberts-MacBook-Pro backend-test-advance % python3 compute_tax.py
+
+Name: Gilbert | Annual Salary 60,000.20
+
++-------------------------+----------+---------------+---------------+
+|Salary Bracket           |   Rate   | Taxable Amount|      Total Tax|
++-------------------------+----------+---------------+---------------+
+|first 0 - 20000          |  0.00   %|      20,000.00|           0.00|
+|next 20001-40000         |  10.00  %|      20,000.00|       2,000.00|
+|next 40001-80000         |  20.00  %|      20,000.20|       4,000.04|
+|next 80001-180000        |  30.00  %|           0.00|           0.00|
+|180001 and above         |  40.00  %|           0.00|           0.00|
++-------------------------+----------+---------------+---------------+
+|**Total**                |          |      60,000.20|       6,000.04|
++-------------------------+----------+---------------+---------------+
+
+Name: Maymay | Annual Salary 80,150.15
+
++-------------------------+----------+---------------+---------------+
+|Salary Bracket           |   Rate   | Taxable Amount|      Total Tax|
++-------------------------+----------+---------------+---------------+
+|first 0 - 20000          |  0.00   %|      20,000.00|           0.00|
+|next 20001-40000         |  10.00  %|      20,000.00|       2,000.00|
+|next 40001-80000         |  20.00  %|      40,000.00|       8,000.00|
+|next 80001-180000        |  30.00  %|         150.15|          45.04|
+|180001 and above         |  40.00  %|           0.00|           0.00|
++-------------------------+----------+---------------+---------------+
+|**Total**                |          |      80,150.15|      10,045.04|
++-------------------------+----------+---------------+---------------+
+
+Name: Anton | Annual Salary 200,000.80
+
++-------------------------+----------+---------------+---------------+
+|Salary Bracket           |   Rate   | Taxable Amount|      Total Tax|
++-------------------------+----------+---------------+---------------+
+|first 0 - 20000          |  0.00   %|      20,000.00|           0.00|
+|next 20001-40000         |  10.00  %|      20,000.00|       2,000.00|
+|next 40001-80000         |  20.00  %|      40,000.00|       8,000.00|
+|next 80001-180000        |  30.00  %|     100,000.00|      30,000.00|
+|180001 and above         |  40.00  %|      20,000.80|       8,000.32|
++-------------------------+----------+---------------+---------------+
+|**Total**                |          |     200,000.80|      48,000.32|
++-------------------------+----------+---------------+---------------+
+
+Name: Ronald | Annual Salary -5.00
+
++-------------------------+----------+---------------+---------------+
+|Salary Bracket           |   Rate   | Taxable Amount|      Total Tax|
++-------------------------+----------+---------------+---------------+
+|first 0 - 20000          |  0.00   %|           0.00|           0.00|
+|next 20001-40000         |  10.00  %|           0.00|           0.00|
+|next 40001-80000         |  20.00  %|           0.00|           0.00|
+|next 80001-180000        |  30.00  %|           0.00|           0.00|
+|180001 and above         |  40.00  %|           0.00|           0.00|
++-------------------------+----------+---------------+---------------+
+|**Total**                |          |          -5.00|           0.00|
++-------------------------+----------+---------------+---------------+
+```
