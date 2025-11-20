@@ -1,8 +1,7 @@
-from typing import Annotated, Optional
+from typing import Annotated
 
 from fastapi import Depends
-from sqlmodel import Field, Session, SQLModel, create_engine
-from datetime import datetime  
+from sqlmodel import Session, SQLModel, create_engine
 
 sqlite_file_name = "employee_salaries.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
