@@ -12,24 +12,49 @@ Server Documentation at http://127.0.0.1:8000/docs
 ```
 Documentation is using Swagger UI. FASTAPI autogenerates this by default.
 
+# Database (DB)
+Database (often shortened to DB in my comments) is using `sqlite`.
+`This is for simplicity for testing the app.`
+In real world commercial scale, I would recommend using PostgreSQL or MongoDB or other enterprise grade DB, depending on the use case. 
+Once the app starts, the DB will create a `employee_salaries.db` file at the root of this app directory. 
+
 # APIs
 There's 3 APIs written:
 
 - `/` returns Hello World
 - GET `/employee_salaries` to get all salaries stored in database.
-- POST `/employee_salaries` with employee name and salary amount to store into database.
+    - it runs SELECT query statement in the ORM, so you can give offset and limit the query (`NOTE: default limit is 100 items output into the JSON`)
+- POST `/employee_salaries` with employee name and annual salary amount to store into database.
+    - POST expects `non empty string for employee name`, and a `string/float annual salary amount`
+    - anything other than that is automatically rejected by pydantic. For more examples on what is rejected, you can see `test_main.py` on my unit testing.
 
 # Pre-requisites 
-To run the app, first make sure you have python3 and pip in your computer:
+To run the app, first make sure you have python3 and pip in your computer, here is the version i used:
 ```
+(venv) backend-test-advance % python3 --version  
+Python 3.9.6
+(venv) backend-test-advance % pip --version
+pip 21.2.4 from /backend-test-advance/venv/lib/python3.9/site-packages/pip (python 3.9)
 ```
 
-Then, create venv and install dependencies as listed from `requirements.txt`:
+Then, create venv :
 
 ```
+python -m venv venv
+venv\Scripts\activate # bash
+.\venv\Scripts\activate # PowerShell
+source venv/bin/activate # macOS or Linux or Git Bash
 ```
+Once venv activated it will look like this:
+```
+(venv) $
+```
+
+
+`ALWAYS MAKE SURE YOU ARE USING VENV (i.e. venv is activated) before doing anything else!`
+
 # The app
-1. `cd` to this root directory and run pip install
+1. `cd` to this app's root directory and run pip install
 
 ```
 fastapi dev main.py
@@ -43,4 +68,19 @@ fastapi dev main.py
 3. With FastAPI, The data validation happens automatically with pydantic class
 4. Similar to other backend frameworks, FastAPI uses dependency injections thru various decorators to add middlewares, such as DB Session. 
 
+
+# Testing
+1. all tests are written in `test_main.py`
+2. Run these to install:
+```
+pip install pytest
+```
+
+3. To test,`cd` to this app's root directory, and run :
+```
+pytest
+
+EXPECTED OUTPUT:
+======================= 6 passed, 2 warnings in X.XXs =========================================================================================
+```
 
