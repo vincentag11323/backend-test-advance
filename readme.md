@@ -5,31 +5,12 @@ For the OOP Design Pattern, I've done `Template Method pattern` as well as `Comp
 For further details on Design Pattern, I've attached UML diagrams to list all my implementations.
 I've written the API with FASTAPI framework.
 
-# Server
-```
-Server starts at http://127.0.0.1:8000
-Server Documentation at http://127.0.0.1:8000/docs  
-```
-Documentation is using Swagger UI. FASTAPI autogenerates this by default.
-You can test the API through the Swagger UI at `http://127.0.0.1:8000/docs`
-
 # Database (DB)
 Database (often shortened to DB in my comments) is using `sqlite`.
 `This is for simplicity for testing the app.`
 In real world commercial scale, I would recommend using PostgreSQL or MongoDB or other enterprise grade DB, depending on the use case. 
 Once the app starts, the DB will create a `employee_salaries.db` file at the root of this app directory. 
 
-# APIs
-There's 3 APIs written:
-
-- `/` returns Hello World
-- GET `/employee_salaries` to get all salaries stored in database.
-    - it runs SELECT query statement in the ORM, so you can give offset and limit the query (`NOTE: default limit is 100 items output into the JSON`)
-    
-- POST `/employee_salaries` with employee name and annual salary amount to store into database.
-    - POST expects `non empty string for employee name`, and a `string/float annual salary amount`
-    - anything other than that is automatically rejected by pydantic. For more examples on what is rejected, you can see `test_main.py` on my unit testing.
-    - Float Value is not formatted into 2 decimal places in the DB storage, but for readability purposes, I return them as 2 decimal places in POST request only.
 # Pre-requisites 
 To run the app, first make sure you have python3 and pip in your computer, here is the version i used:
 ```
@@ -56,8 +37,12 @@ Once venv activated it will look like this:
 `ALWAYS MAKE SURE YOU ARE USING VENV (i.e. venv is activated) before doing anything else!`
 
 # The app
-1. `cd` to this app's root directory and run pip install
+`AFTER successful activation of your venv as stated above`, `cd` to this app's root directory, and then `run pip install from requirements.txt`:
+```
+pip install -r requirements.txt
+```
 
+Then run the app:
 ```
 fastapi dev main.py
 ```
@@ -70,6 +55,26 @@ fastapi dev main.py
 3. With FastAPI, The data validation happens automatically with pydantic class
 4. Similar to other backend frameworks, FastAPI uses dependency injections thru various decorators to add middlewares, such as DB Session. 
 
+# Server
+```
+Server starts at http://127.0.0.1:8000
+Server Documentation at http://127.0.0.1:8000/docs  
+```
+Documentation is using Swagger UI. FASTAPI autogenerates this by default.
+You can test the API through the Swagger UI at `http://127.0.0.1:8000/docs`
+
+
+# APIs
+There's 3 APIs written:
+
+- `/` returns Hello World
+- GET `/employee_salaries` to get all salaries stored in database.
+    - it runs SELECT query statement in the ORM, so you can give offset and limit the query (`NOTE: default limit is 100 items output into the JSON`)
+    
+- POST `/employee_salaries` with employee name and annual salary amount to store into database.
+    - POST expects `non empty string for employee name`, and a `string/float annual salary amount`
+    - anything other than that is automatically rejected by pydantic. For more examples on what is rejected, you can see `test_main.py` on my unit testing.
+    - Float Value is not formatted into 2 decimal places in the DB storage, but for readability purposes, I return them as 2 decimal places in POST request only.
 
 # Testing
 1. all tests are written in `test_main.py`
