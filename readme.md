@@ -24,10 +24,11 @@ There's 3 APIs written:
 - `/` returns Hello World
 - GET `/employee_salaries` to get all salaries stored in database.
     - it runs SELECT query statement in the ORM, so you can give offset and limit the query (`NOTE: default limit is 100 items output into the JSON`)
+    
 - POST `/employee_salaries` with employee name and annual salary amount to store into database.
     - POST expects `non empty string for employee name`, and a `string/float annual salary amount`
     - anything other than that is automatically rejected by pydantic. For more examples on what is rejected, you can see `test_main.py` on my unit testing.
-
+    - Float Value is not formatted into 2 decimal places in the DB storage, but for readability purposes, I return them as 2 decimal places in POST request only.
 # Pre-requisites 
 To run the app, first make sure you have python3 and pip in your computer, here is the version i used:
 ```
