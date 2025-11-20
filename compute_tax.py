@@ -79,17 +79,13 @@ class TaxBracketComposite:
     
     def compute_total_tax(self, taxable_income: float):
         """
-        Aggregates the tax computed by all individual child brackets (the core
-        functionality of the Composite Pattern for this problem), returns result only, no print output.
+        Aggregates the tax computed by all individual child brackets. Returns result only, no print output.
         """
         return sum(bracket.compute_tax(taxable_income) for bracket in self._children)
     
     def compute_tax_printable(self, name:str, taxable_income: float) -> float:
         """
-        Aggregates the tax computed by all individual child brackets (the core
-        functionality of the Composite Pattern for this problem).
-        
-        This method is updated to print the requested detailed table format.
+        Aggregates the tax computed by all individual child brackets, with prints to stdout.
         """
         printable_result: list[tuple[str, float, float]] = []
         total_tax: float = 0.0
@@ -132,7 +128,7 @@ class TaxBracketComposite:
 def init_tax_system() -> TaxBracketComposite:
     """
     Initializes and returns a new TaxBracketComposite instance configured
-    with all standard tax brackets.
+    with all tax brackets.
     """
     tax_system = TaxBracketComposite()
     
