@@ -86,3 +86,14 @@ def calculate_and_create_employee_salary(employee_detail: PostEmployeeSalary, se
         "net_monthly_income": f"{net_monthly_income:.2f}",     
     }
 
+@app.get("/employee_salaries/", response_model=GetEmployeeSalaries)
+def get_employee_salaries(
+    session: SessionDep,
+    offset: int = 0,
+    limit: int = 100,
+) -> GetEmployeeSalaries:
+    """retrieves all employee salaries from Database."""
+    employee_salaries = session.exec(select(EmployeeSalary).offset(offset).limit(limit)).all()
+    return  {
+        "salary_computations": employee_salaries
+    }
