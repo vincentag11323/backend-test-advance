@@ -1,4 +1,6 @@
-"""Parent class TaxBracket with compute_tax function, implementing template method pattern."""
+# ----------------------------------------------------------------------
+# Parent class TaxBracket with compute_tax function, implementing template method pattern.
+# ----------------------------------------------------------------------
 class TaxBracket:
     TAX_PERCENTAGE = 0
     LOWER_BOUND = 0
@@ -14,12 +16,14 @@ class TaxBracket:
         return self.TAX_PERCENTAGE
     # the 2 functions below are to be modified per TaxBracket class that implements this template class.
     # since a lot of them share similar implementation, i decided to put the implementation in the parent class.
-    def compute_tax(self,taxable_income: int):
+    def compute_tax(self,taxable_income: float):
         return self.compute_taxable_amount(taxable_income) * self.TAX_PERCENTAGE
-    def compute_taxable_amount(self,taxable_income: int):
+    def compute_taxable_amount(self,taxable_income: float):
         return min( max(taxable_income - self.LOWER_BOUND, 0) ,self.UPPER_BOUND -  self.LOWER_BOUND)
     
-""" First Tax Bracket class 0 to 20000"""
+# ----------------------------------------------------------------------
+# First Tax Bracket to Highest
+# ----------------------------------------------------------------------
 class FirstTaxBracket(TaxBracket):
     TAX_PERCENTAGE = 0
     LOWER_BOUND = 0
@@ -54,9 +58,12 @@ class HighestTaxBracket(TaxBracket):
     def get_description(self):
         return "180001 and above"
     # implement a different way to calculate taxable_amount since it has no UPPER_BOUND.
-    def compute_taxable_amount(self,taxable_income: int):
+    def compute_taxable_amount(self,taxable_income: float):
         return max(taxable_income - self.LOWER_BOUND, 0)
     
+# ----------------------------------------------------------------------
+# Composite Class To Create Aggregates
+# ----------------------------------------------------------------------
 class TaxBracketComposite:
     def __init__(self):
         # The list to hold child components (TaxBracket instances)
@@ -69,14 +76,15 @@ class TaxBracketComposite:
     def remove_tax_bracket(self, tax_bracket: TaxBracket):
         """Removes a bracket from the composite."""
         self._children.remove(tax_bracket)
-    def compute_total_tax(self, taxable_income: int):
+    
+    def compute_total_tax(self, taxable_income: float):
         """
         Aggregates the tax computed by all individual child brackets (the core
         functionality of the Composite Pattern for this problem), returns result only, no print output.
         """
-        pass
+        return sum(bracket.compute_tax(taxable_income) for bracket in self._children)
     
-    def compute_tax_printable(self, name:str, taxable_income: int) -> float:
+    def compute_tax_printable(self, name:str, taxable_income: float) -> float:
         """
         Aggregates the tax computed by all individual child brackets (the core
         functionality of the Composite Pattern for this problem).
@@ -93,9 +101,9 @@ class TaxBracketComposite:
             # print('tx', taxable_amount , 'income taxd',income_taxed , 'from ', tax_bracket.get_description() )
             printable_result.append([tax_bracket.get_description(), tax_bracket.get_rate(), taxable_amount, income_taxed])
             total_tax += income_taxed
-        print(f"\nName: {name} | Annual Salary {taxable_income:,.0f}\n")
+        print(f"\nName: {name} | Annual Salary {taxable_income:,.2f}\n")
         
-        # Column formatting widths
+        # column formatting widths
         COL_WIDTH_DESC = 25
         COL_WIDTH_RATE = 10
         COL_WIDTH_INCOME = 15
@@ -103,41 +111,49 @@ class TaxBracketComposite:
         
         separator = f"+{'-' * COL_WIDTH_DESC}+{'-' * COL_WIDTH_RATE}+{'-' * COL_WIDTH_INCOME}+{'-' * COL_WIDTH_TAX}+"
         
-        # 2. Header (Updated names)
+        # print header
         print(separator)
         print(f"|{'Salary Bracket':<{COL_WIDTH_DESC}}|{'Rate':^{COL_WIDTH_RATE}}|{'Taxable Amount':>{COL_WIDTH_INCOME}}|{'Total Tax':>{COL_WIDTH_TAX}}|")
         print(separator)
         
-        # Data Rows
+        # print data
         for desc, rate, taxable_amount, tax in printable_result:
-            print(f"|{desc:<{COL_WIDTH_DESC}}|{rate * 100:^{COL_WIDTH_RATE-1}.0f}%|{taxable_amount:>{COL_WIDTH_INCOME},.0f}|{tax:>{COL_WIDTH_TAX},.2f}|")
+            print(f"|{desc:<{COL_WIDTH_DESC}}|{rate * 100:^{COL_WIDTH_RATE-1}.2f}%|{taxable_amount:>{COL_WIDTH_INCOME},.2f}|{tax:>{COL_WIDTH_TAX},.2f}|")
 
-        # 3. Total Row (Updated description)
+        # print total
         print(separator)
-        print(f"|{'**Total**':<{COL_WIDTH_DESC}}|{'':^{COL_WIDTH_RATE}}|{taxable_income:>{COL_WIDTH_INCOME},.0f}|{total_tax:>{COL_WIDTH_TAX},.2f}|")
+        print(f"|{'**Total**':<{COL_WIDTH_DESC}}|{'':^{COL_WIDTH_RATE}}|{taxable_income:>{COL_WIDTH_INCOME},.2f}|{total_tax:>{COL_WIDTH_TAX},.2f}|")
         print(separator)
 
-if __name__ == "__main__":
-    # 1. Create the Composite object
+# ----------------------------------------------------------------------
+# Reusable Initialization Function
+# ----------------------------------------------------------------------
+
+def init_tax_system() -> TaxBracketComposite:
+    """
+    Initializes and returns a new TaxBracketComposite instance configured
+    with all standard tax brackets.
+    """
     tax_system = TaxBracketComposite()
+    
+    # add all tax brackets
+    tax_system.add_tax_bracket(FirstTaxBracket())
+    tax_system.add_tax_bracket(SecondTaxBracket())
+    tax_system.add_tax_bracket(ThirdTaxBracket())
+    tax_system.add_tax_bracket(FourthTaxBracket())
+    tax_system.add_tax_bracket(HighestTaxBracket())
 
-    # 2. Add all Leaf objects (Tax Brackets) to the Composite
-    first_bracket = FirstTaxBracket()
-    second_bracket = SecondTaxBracket()
-    third_bracket = ThirdTaxBracket()
-    fourth_bracket = FourthTaxBracket()
-    highest_bracket =  HighestTaxBracket()
+    return tax_system
 
-    tax_system.add_tax_bracket(first_bracket)
-    tax_system.add_tax_bracket(second_bracket)
-    tax_system.add_tax_bracket(third_bracket)
-    tax_system.add_tax_bracket(fourth_bracket)
-    tax_system.add_tax_bracket(highest_bracket)
+# ------------------------------------------------
+#               Main Execution Block
+# ------------------------------------------------
+if __name__ == "__main__":
+    # instantiate the Composite object with all of its children
+    tax_system = init_tax_system()
 
-
-    tax_system.compute_tax_printable('Gilbert' , 60000)
-    tax_system.compute_tax_printable('Maymay' , 80150)
-
-    tax_system.compute_tax_printable('Anton' , 200000)
-
+    # Composite object is ready, now we can test it. 
+    tax_system.compute_tax_printable('Gilbert' , 60000.20)
+    tax_system.compute_tax_printable('Maymay' , 80150.15)
+    tax_system.compute_tax_printable('Anton' , 200000.80)
     tax_system.compute_tax_printable('Ronald' , -5)
