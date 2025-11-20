@@ -90,8 +90,9 @@ EXPECTED OUTPUT:
 Tax calculation is using `Composite` and `Template Method` Design Pattern for decoupling purposes. 
 This is explained in the `OOP UML Class Diagram.pdf` diagram that I've submitted.
 `Please note` that in my implementation, I use 2 decimal places since it's a currency, and I mostly use `float` data type to deal with numbers.
+Also, `please note` that `compute_tax_simple.py` is my prototype proofing before adding `design patterns` in, so  you can safely ignore that file. 
 
-The implementation classes is located at `compute_tax.py` 
+The implementation classes with design pattern is located at `compute_tax.py` 
 it has `__main__` execution block, so you can run it by simply calling:
 ```
 python3 compute_tax.py
