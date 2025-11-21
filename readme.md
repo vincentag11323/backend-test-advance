@@ -77,11 +77,15 @@ There's 3 APIs written:
     - Float Value is not formatted into 2 decimal places in the DB storage, but for readability purposes, I return them as 2 decimal places in POST request only.
 
 # Testing
+
+`Please note that I did not setup the test database, so please run the API and post some data, so that the database exists, and then proceed with testing.`
+
 1. all tests are written in `test_main.py`
 2. Run these to install:
 ```
 pip install pytest
 ```
+
 
 3. To test,`cd` to this app's root directory, and run :
 ```
