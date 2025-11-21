@@ -33,7 +33,7 @@ Once venv activated it will look like this:
 (venv) $
 ```
 
-
+`Please use the same python and pip version to install , etc.`
 `ALWAYS MAKE SURE YOU ARE USING VENV (i.e. venv is activated) before doing anything else!`
 
 # The app
